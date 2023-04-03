@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using X.PagedList;
 using TechPort.Data;
 using TechPort.Models;
 
@@ -22,10 +23,15 @@ namespace TechPort.Controllers
 
         [Authorize]
         // GET: Navios
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? page)
         {
-            var applicationDbContext = _context.Navios.Include(n => n.Empresa);
-            return View(await applicationDbContext.ToListAsync());
+            var pageNumber = page ?? 1; // se o parâmetro page for nulo, use a primeira página como padrão
+            var pageSize = 3; // defina o número de registros exibidos em cada página
+
+            
+            var navios = await _context.Navios.Include(n => n.Empresa)
+                                                 .ToPagedListAsync(pageNumber, pageSize) as IPagedList<Navio>; ;
+            return View(navios);
         }
 
         [Authorize]

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using X.PagedList;
 using TechPort.Data;
 using TechPort.Models;
 
@@ -25,10 +26,15 @@ namespace TechPort.Controllers
 
         [Authorize]
         // GET: VidasConteiners
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? page)
         {
-            var applicationDbContext = _context.VidasConteiner.Include(v => v.Conteiner).Include(v => v.Viagem);
-            return View(await applicationDbContext.ToListAsync());
+
+            var pageNumber = page ?? 1; // se o parâmetro page for nulo, use a primeira página como padrão
+            var pageSize = 3; // defina o número de registros exibidos em cada página
+
+            var vidaConteiners = await _context.VidasConteiner.Include(v => v.Conteiner).Include(v => v.Viagem)
+                                                 .ToPagedListAsync(pageNumber, pageSize) as IPagedList<VidaConteiner>;
+            return View(vidaConteiners);
         }
 
         [Authorize]

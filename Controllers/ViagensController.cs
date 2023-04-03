@@ -4,8 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using X.PagedList;
 using TechPort.Data;
 using TechPort.Models;
 
@@ -14,6 +16,7 @@ namespace TechPort.Controllers
     public class ViagensController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private int? page;
 
         public ViagensController(ApplicationDbContext context)
         {
@@ -22,10 +25,14 @@ namespace TechPort.Controllers
 
         [Authorize]
         // GET: Viagens
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? page)
         {
-            var applicationDbContext = _context.Viagens.Include(v => v.Navio);
-            return View(await applicationDbContext.ToListAsync());
+            var pageNumber = page ?? 1; // se o parâmetro page for nulo, use a primeira página como padrão
+            var pageSize = 3; // defina o número de registros exibidos em cada página
+
+            var viagens = await _context.Viagens.Include(v => v.Navio)
+                                                 .ToPagedListAsync(pageNumber, pageSize) as IPagedList<Viagem>; ;
+            return View(viagens);
         }
 
         [Authorize]
