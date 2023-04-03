@@ -1,4 +1,6 @@
-﻿@model IEnumerable<TechPort.Models.Empresa>
+﻿@model X.PagedList.IPagedList<TechPort.Models.Empresa>
+@using X.PagedList.Mvc.Core;
+@using X.PagedList;
 
 @{
     ViewData["Title"] = "Index";
@@ -13,7 +15,7 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Nome)
+                @Html.DisplayNameFor(model => model[0].Nome)
             </th>
             <th></th>
         </tr>
@@ -33,3 +35,7 @@
 }
     </tbody>
 </table>
+
+<div class="text-center">
+    @(Html.PagedListPager(Model, page => Url.Action("Index", new { page })))
+</div>
