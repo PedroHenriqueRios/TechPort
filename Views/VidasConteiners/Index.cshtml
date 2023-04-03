@@ -1,4 +1,6 @@
-﻿@model IEnumerable<TechPort.Models.VidaConteiner>
+﻿@model X.PagedList.IPagedList<TechPort.Models.VidaConteiner>
+@using X.PagedList.Mvc.Core;
+@using X.PagedList;
 
 @{
     ViewData["Title"] = "Index";
@@ -16,16 +18,16 @@
                 @*@Html.DisplayNameFor(model => model.Conteiner)*@ @Html.LabelFor(model => model.FirstOrDefault().Conteiner, "Container", htmlAttributes: new { @class = "control-label col-md-2" })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.StatusConteiner)
+                @Html.DisplayNameFor(model => model[0].StatusConteiner)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Viagem)
+                @Html.DisplayNameFor(model => model[0].Viagem)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Navio)
+                @Html.DisplayNameFor(model => model[0].Navio)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Etapa)
+                @Html.DisplayNameFor(model => model[0].Etapa)
             </th>
             <th></th>
         </tr>
@@ -57,3 +59,8 @@
 }
     </tbody>
 </table>
+
+
+<div class="text-center">
+    @(Html.PagedListPager(Model, page => Url.Action("Index", new { page })))
+</div>
