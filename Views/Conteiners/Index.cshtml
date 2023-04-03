@@ -1,4 +1,6 @@
-﻿@model IEnumerable<TechPort.Models.Conteiner>
+﻿@model X.PagedList.IPagedList<TechPort.Models.Conteiner>
+@using X.PagedList.Mvc.Core;
+@using X.PagedList;
 
 @{
     ViewData["Title"] = "Index";
@@ -16,10 +18,10 @@
                 @* @Html.DisplayNameFor(model => model.Nome)*@ @Html.LabelFor(model => model.FirstOrDefault().Nome, "Container", htmlAttributes: new { @class = "control-label col-md-2" })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Tipo)
+                @Html.DisplayNameFor(model => model[0].Tipo)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Empresa)
+                @Html.DisplayNameFor(model => model[0].Empresa)
             </th>
             <th></th>
         </tr>
@@ -45,3 +47,7 @@
 }
     </tbody>
 </table>
+
+<div class="text-center">
+    @(Html.PagedListPager(Model, page => Url.Action("Index", new { page })))
+</div>
